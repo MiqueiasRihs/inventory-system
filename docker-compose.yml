@@ -1,0 +1,32 @@
+version: '3'
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    tty: true
+    stdin_open: true
+    ports:
+      - "8000:8000"
+    networks:
+      - mynetwork
+    volumes:
+      - .:/home/dev/inventory-system/
+    depends_on:
+      - postgres-db
+    environment:
+      - DATABASE_URL=postgresql://postgres:mysecretpassword@postgres-db:5432/mydatabase
+
+  postgres-db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
