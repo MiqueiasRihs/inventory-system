@@ -18,17 +18,17 @@ def get_db():
 
 
 @app.post("/cadastrar-produto", response_model=schemas.Inventory)
-def register_product(inventory: schemas.InventoryCreate, db: Session = Depends(get_db)):
-    product = crud.get_inventory_by_id(db, id=inventory.id)
-    if product:
+def register_product(product: schemas.InventoryCreate, db: Session = Depends(get_db)):
+    inventory = crud.get_inventory_by_id(db, id=product.id)
+    if inventory:
         raise HTTPException(status_code=400, detail="Este produto já existe, tente atualiza-lo")
-    return crud.create_inventory(db=db, inventory=inventory)
+    return crud.create_inventory(db=db, inventory=product)
 
 
 @app.put("/atualizar-produto", response_model=schemas.Inventory)
-def update_product_inventory(inventory: schemas.InventoryCreate, db: Session = Depends(get_db)):
-    product = crud.get_inventory_by_id(db, id=inventory.id)
-    if not product:
+def update_product_inventory(product: schemas.InventoryCreate, db: Session = Depends(get_db)):
+    inventory = crud.get_inventory_by_id(db, id=product.id)
+    if not inventory:
         raise HTTPException(status_code=400, detail="Este produto não existe, tente cria-lo antes")
-    return crud.update_inventory_quantity(db, inventory.id, inventory.quantity)
+    return crud.update_inventory_quantity(db, product.id, product.quantity, product.name)
 
