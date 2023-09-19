@@ -36,10 +36,18 @@ def register_product(products: List[schemas.InventoryCreate], db: Session = Depe
     return created_products
 
 
-@app.put("/atualizar-produto", response_model=schemas.Inventory)
-def update_product_inventory(product: schemas.InventoryCreate, db: Session = Depends(get_db)):
-    inventory = crud.get_inventory_by_id(db, id=product.id)
-    if not inventory:
-        raise HTTPException(status_code=400, detail="Este produto não existe, tente cria-lo antes")
-    return crud.update_inventory_quantity(db, product.id, product.quantity, product.name)
+@app.put("/atualizar-produto", response_model=List[schemas.Inventory])
+def update_product_inventory(products: List[schemas.InventoryCreate], db: Session = Depends(get_db)):
+    updated_products = []
+    
+    for product in products:
+        inventory = crud.get_inventory_by_id(db, id=product.id)
+        if not inventory:
+            raise HTTPException(status_code=400, detail="Este produto não existe, tente cria-lo antes")
+
+        else:
+            updated_product = crud.update_inventory_quantity(db, product.id, product.quantity, product.name) 
+            updated_products.append(updated_product)
+    
+    return updated_products
 
