@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 
 class InventoryBase(BaseModel):
@@ -9,7 +9,12 @@ class InventoryBase(BaseModel):
     name: Union[str, None] = None
 
 class InventoryCreate(InventoryBase):
-    pass
+    
+    @validator('quantity')
+    def validate_quantity(cls, value):
+        if value < 0:
+            raise ValueError('A quantidade não pode ser negativa')
+        return value
 
 class Inventory(InventoryBase):
     
