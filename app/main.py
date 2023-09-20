@@ -2,11 +2,10 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
 from sql import crud, models, schemas
+from sql.schemas import InventoryCreate
 from sql.database import SessionLocal, engine
 
 from typing import List
-
-import json
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -51,3 +50,18 @@ def update_product_inventory(products: List[schemas.InventoryCreate], db: Sessio
     
     return updated_products
 
+
+@app.post("/cadastrar-estoque-futuro", response_model=List[schemas.FutureInventory])
+def register_future_inventory(products: List[schemas.FutureInventoryCreate], db: Session = Depends(get_db)):
+    created_products = []
+    
+    for product in products:
+        future_inventory = crud.get_future_inventory_by_id(db, id=product.id)
+
+        if future_inventory:
+            raise HTTPException(status_code=400, detail=f"O estoque futuro do produto com ID {product.id} já existe, tente atualizá-lo")
+            
+        created_product = crud.create_future_inventory(db=db, product=product)
+        created_products.append(created_product)
+
+    return created_products

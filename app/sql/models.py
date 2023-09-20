@@ -21,8 +21,7 @@ class FutureInventory(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=True, index=True)
     quantity = Column(Integer, default=0)
-    available_date = Column(Date, index=True, nullable=True)
-    inventory_id = Column(Integer, ForeignKey("inventory.id"))
+    available_date = Column(Date, index=True)
 
 
 # Todo: 
