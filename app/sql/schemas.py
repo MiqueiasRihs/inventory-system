@@ -12,7 +12,6 @@ class InventoryBase(BaseModel):
     name: Union[str, None] = None
 
 class InventoryCreate(InventoryBase):
-    
     @validator('quantity')
     def validate_quantity(cls, value):
         if value < 0:
@@ -23,6 +22,17 @@ class Inventory(InventoryBase):
     class Config:
         orm_mode = True
         
+        
+###### FutureInventory ######
+class UpdateProductQuantity(BaseModel):
+    quantity: int
+
+    @validator('quantity')
+    def validate_quantity(cls, value):
+        if value < 0:
+            raise ValueError('A quantidade não pode ser negativa')
+        return value
+
 
 ###### FutureInventory ######
 class FutureInventoryBase(BaseModel):
@@ -43,5 +53,29 @@ class FutureInventoryCreate(FutureInventoryBase):
         return str(date_obj)
 
 class FutureInventory(FutureInventoryBase):
+    class Config:
+        orm_mode = True
+        
+        
+###### FutureInventory ######
+class InventoryReservationBase(BaseModel):
+    id: int
+    status: str
+    quantity: int
+    name: Union[str, None] = None
+    expiration_date: Union[str, date]
+
+class InventoryReservationCreate(InventoryReservationBase):
+
+    @validator('expiration_date')
+    def validate_expiration_date(cls, value):
+        try:
+            date_obj = datetime.strptime(value, '%d/%m/%Y').date()
+        except ValueError:
+            raise ValueError('Data de expiração inválida')
+    
+        return str(date_obj)
+
+class InventoryReservation(InventoryReservationBase):
     class Config:
         orm_mode = True
