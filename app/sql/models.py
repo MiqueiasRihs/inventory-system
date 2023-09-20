@@ -26,10 +26,10 @@ class FutureInventory(Base):
 
 # Todo: 
 # Ao reservar um produto o Inventory precisa ser atualizado o valor
-class InventoryReservation(Base):
-    __tablename__ = "inventory_reservation"
+class ReservationInventory(Base):
+    __tablename__ = "reservation_inventory"
     
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, autoincrement=True, primary_key=True, index=True)
     quantity = Column(Integer, default=0, index=True)
     expiration_date = Column(Date, index=True, nullable=True)
     status = Column(String, index=True)

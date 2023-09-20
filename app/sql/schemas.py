@@ -52,20 +52,19 @@ class FutureInventoryCreate(FutureInventoryBase):
     
         return str(date_obj)
 
-class FutureInventory(FutureInventoryBase):
+class   FutureInventory(FutureInventoryBase):
     class Config:
         orm_mode = True
         
         
-###### FutureInventory ######
-class InventoryReservationBase(BaseModel):
+###### ReservationInventory ######
+class ReservationInventoryBase(BaseModel):
     id: int
     status: str
     quantity: int
-    name: Union[str, None] = None
     expiration_date: Union[str, date]
 
-class InventoryReservationCreate(InventoryReservationBase):
+class ReservationInventoryCreate(ReservationInventoryBase):
 
     @validator('expiration_date')
     def validate_expiration_date(cls, value):
@@ -76,6 +75,6 @@ class InventoryReservationCreate(InventoryReservationBase):
     
         return str(date_obj)
 
-class InventoryReservation(InventoryReservationBase):
+class ReservationInventory(ReservationInventoryBase):
     class Config:
         orm_mode = True

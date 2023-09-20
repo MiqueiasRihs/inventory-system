@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
 from sql import crud, models, schemas
-from sql.schemas import InventoryCreate
+from sql.constants import inventory_reservation_difference
 from sql.database import SessionLocal, engine
 
 from typing import List
@@ -58,3 +58,22 @@ def register_future_inventory(products: List[schemas.FutureInventoryCreate], db:
         created_products.append(created_product)
 
     return created_products
+
+
+@app.post("/estoque/reserva", response_model=List[schemas.ReservationInventory])
+def inventory_reservation(products: List[schemas.ReservationInventoryCreate], db: Session = Depends(get_db)):
+    reservations_products = []
+    
+    for product in products:
+        inventory = crud.get_inventory_by_id(db, id=product.id)
+        if not inventory:
+            raise HTTPException(status_code=400, detail=f"Não é possivel realizar a reserva pois o produto com ID {product.id} não existe")
+
+        difference = inventory_reservation_difference(db, product.id)
+        if difference and product.quantity > difference["difference"]:
+            raise HTTPException(status_code=400, detail=f"Não é possivel reservar pois não existe estoque suficiente para o produto com ID {product.id}, o o estoque atual é {difference['difference']}")
+            
+        created_product = crud.create_inventory_reservation(db=db, product=product, inventory_id=inventory.id)
+        reservations_products.append(created_product)
+
+    return reservations_products

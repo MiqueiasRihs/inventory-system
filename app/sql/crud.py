@@ -30,14 +30,12 @@ def create_future_inventory(db: Session, product: schemas.FutureInventoryCreate)
     return db_inventory
 
 
-def create_inventory_reservation(db: Session, product: schemas.InventoryReservationCreate):
-    db_inventory = models.InventoryReservation(
-        id=product.id,
+def create_inventory_reservation(db: Session, product: schemas.ReservationInventoryCreate, inventory_id: int):
+    db_inventory = models.ReservationInventory(
         quantity=product.quantity,
         expiration_date=product.expiration_date,
         status=product.status,
-        inventory_id=product.inventory_id,
-        name=product.name if product.name else None
+        inventory_id=inventory_id,
     )
     
     db.add(db_inventory)
@@ -64,3 +62,7 @@ def get_inventory_by_id(db: Session, id: int):
 
 def get_future_inventory_by_id(db: Session, id: int):
     return db.query(models.FutureInventory).filter(models.FutureInventory.id == id).first()
+
+
+def get_reservation_inventory_by_id(db: Session, id: int):
+    return db.query(models.ReservationInventory).filter(models.ReservationInventory.id == id).first()
