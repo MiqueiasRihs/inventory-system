@@ -2,10 +2,10 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
 from sql import crud, models, schemas
-from sql.constants import inventory_reservation_difference, future_inventory_difference
+from sql.constants import get_stock_availability_inventory
 from sql.database import SessionLocal, engine
 
-from typing import List
+from typing import List, Union
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -69,9 +69,9 @@ def inventory_reservation(products: List[schemas.ReservationInventoryCreate], db
         if not inventory:
             raise HTTPException(status_code=400, detail=f"Não é possivel realizar a reserva pois o produto com ID {product.id} não existe")
 
-        reservation_result = inventory_reservation_difference(db, product.id)
-        if reservation_result and product.quantity > reservation_result.get("difference", 0):
-            raise HTTPException(status_code=400, detail=f"Não é possivel reservar pois não existe estoque suficiente para o produto com ID {product.id}, o estoque atual é {difference['difference']}")
+        stock_availability = get_stock_availability_inventory(db, product.id, None)
+        if product.quantity > stock_availability["current_difference"]:
+            raise HTTPException(status_code=400, detail=f"Não é possivel reservar pois não existe estoque suficiente para o produto com ID {product.id}, o estoque atual é {stock_availability['current_difference']}")
             
         created_product = crud.create_inventory_reservation(db=db, product=product, inventory_id=inventory.id)
         reservations_products.append(created_product)
@@ -79,29 +79,29 @@ def inventory_reservation(products: List[schemas.ReservationInventoryCreate], db
     return reservations_products
 
 
-@app.post("/estoque/consulta/{strategy}", response_model=List[schemas.ConsultResult])
+@app.post("/estoque/consulta/{strategy}")
 def consult_inventory(strategy: str, products: List[schemas.Consult], db: Session = Depends(get_db)):
-    products_result = []
+    result = []
 
     for product in products:
+        stock_availability = get_stock_availability_inventory(db, product.id, strategy)
+
         if strategy == "estoque-fisico":
-            reservation_result = inventory_reservation_difference(db, product.id)
-            products_result.append(schemas.ConsultResult(
+            result.append(schemas.ConsultResult(
                 id=product.id,
                 quantity=product.quantity,
-                available_inventory_quantity=reservation_result.get("difference", 0),
-                available=product.quantity <= reservation_result.get("difference", 0)
+                stock_availability=stock_availability.get("stock_availability"),
+                available=product.quantity <= stock_availability.get("stock_availability")
             ))
-            
+
         elif strategy == "estoque-futuro":
-            future_result = future_inventory_difference(db, product.id)
-            products_result.append(schemas.ConsultResultFutureInventory(
+            result.append(schemas.ConsultResultFutureInventory(
                 id=product.id,
                 quantity=product.quantity,
-                available_inventory_quantity=future_result.get("difference", 0),
-                available=product.quantity <= future_result.get("difference", 0),
-                inventory_available_date=future_result.get("inventory_available_date", None)
+                stock_availability=stock_availability.get("stock_availability"),
+                available=product.quantity <= stock_availability.get("stock_availability"),
+                inventory_available_date=stock_availability.get("available_date")
             ))
-            
-    return products_result
+    
+    return result
             

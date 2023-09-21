@@ -1,5 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, ForeignKey, Integer, String, Date
 
 from .database import Base
 
@@ -12,9 +11,6 @@ class Inventory(Base):
     quantity = Column(Integer, default=0, index=True)
 
 
-# Todo:
-# Inventory é uma foreing key de FutureInventory, a ideia é que caso o Inventory não exista
-# ao criar um FutureInventory crie um inventory zerado
 class FutureInventory(Base):
     __tablename__ = "future_inventory"
 
@@ -24,8 +20,6 @@ class FutureInventory(Base):
     available_date = Column(Date, index=True)
 
 
-# Todo: 
-# Ao reservar um produto o Inventory precisa ser atualizado o valor
 class ReservationInventory(Base):
     __tablename__ = "reservation_inventory"
     

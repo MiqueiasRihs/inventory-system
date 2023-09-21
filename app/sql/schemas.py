@@ -85,7 +85,7 @@ class Consult(BaseModel):
     quantity: int
 
 class ConsultResult(Consult):
-    available_inventory_quantity: int
+    stock_availability: int
     available: bool
     
 class ConsultResultFutureInventory(ConsultResult):
