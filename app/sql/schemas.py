@@ -84,11 +84,9 @@ class Consult(BaseModel):
     id: int
     quantity: int
 
-class ConsultResulCreate(Consult):
-    id: int
-    quantity: int
-
 class ConsultResult(Consult):
     available_inventory_quantity: int
     available: bool
+    
+class ConsultResultFutureInventory(ConsultResult):
     inventory_available_date: Union[str, None] = None

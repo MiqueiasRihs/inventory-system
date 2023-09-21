@@ -80,7 +80,7 @@ def inventory_reservation(products: List[schemas.ReservationInventoryCreate], db
 
 
 @app.post("/estoque/consulta/{strategy}", response_model=List[schemas.ConsultResult])
-def consult_inventory(strategy: str, products: List[schemas.ConsultResulCreate], db: Session = Depends(get_db)):
+def consult_inventory(strategy: str, products: List[schemas.Consult], db: Session = Depends(get_db)):
     products_result = []
 
     for product in products:
@@ -95,7 +95,7 @@ def consult_inventory(strategy: str, products: List[schemas.ConsultResulCreate],
             
         elif strategy == "estoque-futuro":
             future_result = future_inventory_difference(db, product.id)
-            products_result.append(schemas.ConsultResult(
+            products_result.append(schemas.ConsultResultFutureInventory(
                 id=product.id,
                 quantity=product.quantity,
                 available_inventory_quantity=future_result.get("difference", 0),
