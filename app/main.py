@@ -69,11 +69,32 @@ def inventory_reservation(products: List[schemas.ReservationInventoryCreate], db
         if not inventory:
             raise HTTPException(status_code=400, detail=f"Não é possivel realizar a reserva pois o produto com ID {product.id} não existe")
 
-        difference = inventory_reservation_difference(db, product.id)
-        if difference and product.quantity > difference["difference"]:
-            raise HTTPException(status_code=400, detail=f"Não é possivel reservar pois não existe estoque suficiente para o produto com ID {product.id}, o o estoque atual é {difference['difference']}")
+        reservation_result = inventory_reservation_difference(db, product.id)
+        if reservation_result and product.quantity > reservation_result.get("difference", 0):
+            raise HTTPException(status_code=400, detail=f"Não é possivel reservar pois não existe estoque suficiente para o produto com ID {product.id}, o estoque atual é {difference['difference']}")
             
         created_product = crud.create_inventory_reservation(db=db, product=product, inventory_id=inventory.id)
         reservations_products.append(created_product)
 
     return reservations_products
+
+
+@app.post("/estoque/consulta/{strategy}", response_model=List[schemas.ConsultResult])
+def consult_inventory(strategy: str, products: List[schemas.ConsultResulCreate], db: Session = Depends(get_db)):
+    products_result = []
+
+    for product in products:
+        if strategy == "estoque_fisico":
+            reservation_result = inventory_reservation_difference(db, product.id)
+            products_result.append(schemas.ConsultResult(
+                id=product.id,
+                quantity=product.quantity,
+                available_inventory_quantity=reservation_result.get("difference", 0),
+                available=product.quantity <= reservation_result.get("difference", 0)
+            ))
+            
+        elif strategy == "estoque_futuro":
+            pass
+            
+    return products_result
+            

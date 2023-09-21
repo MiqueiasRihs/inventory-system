@@ -78,3 +78,16 @@ class ReservationInventoryCreate(ReservationInventoryBase):
 class ReservationInventory(ReservationInventoryBase):
     class Config:
         orm_mode = True
+        
+        
+class Consult(BaseModel):
+    id: int
+    quantity: int
+
+class ConsultResulCreate(Consult):
+    id: int
+    quantity: int
+
+class ConsultResult(Consult):
+    available_inventory_quantity: int
+    available: bool

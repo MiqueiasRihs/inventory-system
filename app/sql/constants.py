@@ -8,15 +8,22 @@ def inventory_reservation_difference(db: Session, product_id: int):
         SELECT
             i.id,
             i.quantity AS inventory_quantity,
-            sum(ri.quantity) AS reservation_quantity,
-            (i.quantity - sum(ri.quantity)) AS difference
-        FROM reservation_inventory ri
-        LEFT JOIN inventory i 
+            CASE
+                WHEN SUM(ri.quantity) IS NULL THEN 0
+                ELSE SUM(ri.quantity)
+            END AS reservation_quantity,
+            CASE 
+                WHEN (i.quantity - SUM(ri.quantity)) < 0 THEN 0
+                WHEN SUM(ri.quantity) IS NULL THEN i.quantity
+                ELSE (i.quantity - SUM(ri.quantity))
+            END AS difference
+        FROM inventory i
+        LEFT JOIN reservation_inventory ri 
             ON i.id = ri.inventory_id
+                AND ri.status = 'Ativo'
+                AND ri.expiration_date > now()
         WHERE 1=1
             AND i.id = :product_id
-            AND ri.status = 'Ativo'
-            AND ri.expiration_date > now()
         GROUP BY i.id;
     """)
 
