@@ -91,3 +91,4 @@ class ConsultResulCreate(Consult):
 class ConsultResult(Consult):
     available_inventory_quantity: int
     available: bool
+    inventory_available_date: Union[str, None] = None

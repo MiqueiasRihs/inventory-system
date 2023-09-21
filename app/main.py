@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
 from sql import crud, models, schemas
-from sql.constants import inventory_reservation_difference
+from sql.constants import inventory_reservation_difference, future_inventory_difference
 from sql.database import SessionLocal, engine
 
 from typing import List
@@ -84,7 +84,7 @@ def consult_inventory(strategy: str, products: List[schemas.ConsultResulCreate],
     products_result = []
 
     for product in products:
-        if strategy == "estoque_fisico":
+        if strategy == "estoque-fisico":
             reservation_result = inventory_reservation_difference(db, product.id)
             products_result.append(schemas.ConsultResult(
                 id=product.id,
@@ -93,8 +93,15 @@ def consult_inventory(strategy: str, products: List[schemas.ConsultResulCreate],
                 available=product.quantity <= reservation_result.get("difference", 0)
             ))
             
-        elif strategy == "estoque_futuro":
-            pass
+        elif strategy == "estoque-futuro":
+            future_result = future_inventory_difference(db, product.id)
+            products_result.append(schemas.ConsultResult(
+                id=product.id,
+                quantity=product.quantity,
+                available_inventory_quantity=future_result.get("difference", 0),
+                available=product.quantity <= future_result.get("difference", 0),
+                inventory_available_date=future_result.get("inventory_available_date", None)
+            ))
             
     return products_result
             
