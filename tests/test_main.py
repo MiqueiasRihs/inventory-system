@@ -1,12 +1,11 @@
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
 
 import pytest
 
-from ..sql.database import Base
-from ..main import app, get_db
+from sql.database import Base
+from app.main import app, get_db
 
 SQLALCHEMY_DATABASE_URL = "postgresql://postgres:mysecretpassword@postgres-db:5432/mydatabasetest"
 

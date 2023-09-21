@@ -1,6 +1,6 @@
 FROM python:3.9
 
-WORKDIR /home/dev/inventory-system/app
+WORKDIR /home/dev/inventory-system
 
 COPY requirements.txt .
 
