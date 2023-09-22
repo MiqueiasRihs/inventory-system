@@ -1,5 +1,6 @@
 app/__pycache__/
 app/sql/__pycache__/
-README.md
 sql/__pycache__/
 tests/__pycache__/
+app/tests/__pycache__/
+README.md
