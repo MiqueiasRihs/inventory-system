@@ -76,6 +76,7 @@ class ReservationInventoryCreate(ReservationInventoryBase):
         return str(date_obj)
 
 class ReservationInventory(ReservationInventoryBase):
+    inventory_id: int
     class Config:
         orm_mode = True
         
