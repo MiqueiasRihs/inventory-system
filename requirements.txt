@@ -1,6 +1,8 @@
 fastapi==0.68.1
 uvicorn==0.15.0
-pytest
-requests
-SQLAlchemy
-psycopg2
+pytest==7.4.2
+requests==2.31.0
+SQLAlchemy==1.4.49
+psycopg2==2.9.7
+python-dotenv==1.0.0
+pydantic-settings==0.2.5

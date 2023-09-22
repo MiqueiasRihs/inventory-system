@@ -1,1 +1,1 @@
-CREATE DATABASE solarfaciltest;
+CREATE DATABASE solfaciltest;
