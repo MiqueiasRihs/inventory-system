@@ -7,14 +7,12 @@ import pytest
 from sql.database import Base
 from app.main import app, get_db
 
-from app.config import settings
+from decouple import config
 
 from .utils import create_inventory_data, create_future_inventory_data, create_inventory_reservation_data, \
     INVENTORY_SIMPLE_DATA, INVENTORY_FUTURE_DATA, INVENTORY_RESERVATION_DATA
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:mysecretpassword@postgres-db:5432/solfaciltest"
-
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(config('DATABASE_TEST_URL'))
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
@@ -36,7 +34,6 @@ def test_db():
 app.dependency_overrides[get_db] = override_get_db
 client = TestClient(app)
 
-import pdb; pdb.set_trace();
 
 def test_register_product(test_db):
     response = client.post("/estoque/estoque-fisico", json=INVENTORY_SIMPLE_DATA[:1])

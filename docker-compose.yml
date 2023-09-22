@@ -14,9 +14,7 @@ services:
     volumes:
       - .:/home/dev/inventory-system/
     depends_on:
-      postgres-db:
-        condition: service_healthy
-    restart: always
+      - postgres-db
     environment:
       - DATABASE_URL
 

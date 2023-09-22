@@ -6,3 +6,4 @@ SQLAlchemy==1.4.49
 psycopg2==2.9.7
 python-dotenv==1.0.0
 pydantic-settings==0.2.5
+python-decouple==3.8

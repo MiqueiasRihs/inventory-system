@@ -4,9 +4,11 @@ WORKDIR /home/dev/inventory-system/app
 
 COPY . .
 
-RUN pip install --no-cache-dir -r requirements.txt && \
-    chmod +x ./wait-for-it.sh
+RUN apt-get update && \
+    apt-get install postgresql-client -y && \
+    pip install --no-cache-dir -r requirements.txt && \
+    chmod +x ./setup_env.sh
 
 COPY app .
 
-CMD ["../wait-for-it.sh", "db:5432", "--timeout=5", "--", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["../setup_env.sh"]
