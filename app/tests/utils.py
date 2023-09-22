@@ -2,6 +2,7 @@ INVENTORY_SIMPLE_DATA = [
     {
         "id": 1,
         "quantity": 10,
+        "name": "Camisa"
     },
     {
         "id": 2,
@@ -34,7 +35,7 @@ INVENTORY_RESERVATION_DATA = [
     {
         "id": 3,
         "quantity": 50,
-        "expiration_date": "23/09/2023",
+        "expiration_date": "23/10/2023",
         "status": "Ativo"
     }
 ]

@@ -42,6 +42,12 @@ class FutureInventoryBase(BaseModel):
     name: Union[str, None] = None
     
 class FutureInventoryCreate(FutureInventoryBase):
+    
+    @validator('quantity')
+    def validate_quantity(cls, value):
+        if value < 0:
+            raise ValueError('A quantidade não pode ser negativa')
+        return value
 
     @validator('available_date')
     def validate_available_date(cls, value):
@@ -65,6 +71,12 @@ class ReservationInventoryBase(BaseModel):
     expiration_date: Union[str, date]
 
 class ReservationInventoryCreate(ReservationInventoryBase):
+    
+    @validator('quantity')
+    def validate_quantity(cls, value):
+        if value < 0:
+            raise ValueError('A quantidade não pode ser negativa')
+        return value
 
     @validator('expiration_date')
     def validate_expiration_date(cls, value):
