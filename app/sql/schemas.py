@@ -65,10 +65,17 @@ class   FutureInventory(FutureInventoryBase):
     class Config:
         orm_mode = True
         
-        
+
+###### FutureInventoryUpdate ######
 class FutureInventoryUpdate(BaseModel):
     quantity: int
     available_date: Union[str, date, None]
+    
+    @validator('quantity')
+    def validate_quantity(cls, value):
+        if value < 0:
+            raise ValueError('A quantidade não pode ser negativa')
+        return value
     
     @validator('available_date')
     def validate_available_date(cls, value):

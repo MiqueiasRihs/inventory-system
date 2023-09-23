@@ -352,3 +352,33 @@ def test_consult_invalid_strategy(test_db):
     ])
     
     assert response.status_code == 404
+    
+def test_update_future_inventory(test_db):
+    create_future_inventory_data(client)
+
+    response = client.put("/estoque/estoque-futuro/2", json={
+        "quantity": 15,
+        "available_date": "25/12/2023"
+    })
+
+    assert response.status_code == 200
+    assert response.json() == {'id': 2,'quantity': 15,'available_date': '2023-12-25','name': None}
+    
+
+def test_update_nonexistent_future_inventory(test_db):
+    response = client.put("/estoque/estoque-futuro/100", json={"quantity": 15})
+    assert response.status_code == 400
+
+
+def test_update_future_inventory_negative_quantity(test_db):
+    create_future_inventory_data(client)
+    
+    response = client.put("/estoque/estoque-futuro/2", json={"quantity": -10})
+    assert response.status_code == 422
+
+
+def test_update_future_inventory_null_quantity(test_db):
+    create_future_inventory_data(client)
+    
+    response = client.put("/estoque/estoque-futuro/2", json={"quantity": None})
+    assert response.status_code == 422
