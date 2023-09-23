@@ -5,12 +5,13 @@ max_attempts=10
 
 while [ $attempts -lt $max_attempts ]; do
     if pg_isready -h postgres_inventory -p 5432 -U postgres -d solfacil; then
-        echo "Banco de dados PostgreSQL está pronto!"
+        echo -e "\n================ Banco de dados PostgreSQL está pronto! ================\n"
         python -m pytest
+        echo -e "\n"
         uvicorn main:app --host 0.0.0.0 --port 8000 --reload
         break
     else
-        echo "Tentativa $attempts: Banco de dados não está pronto. Aguardando..."
+        echo -e "\nTentativa $attempts: Banco de dados não está pronto. Aguardando...\n"
         attempts=$((attempts+1))
         sleep 5
     fi

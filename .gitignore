@@ -1,4 +1,5 @@
 app/__pycache__/
+app/.pytest_cache/
 app/sql/__pycache__/
 sql/__pycache__/
 tests/__pycache__/
