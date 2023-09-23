@@ -248,11 +248,12 @@ docker-compose up
     }
 ]
 ```
+You can access the API documentation by visiting http://localhost:8000/docs when the API is running.
 
 ## Tests
  The tests are automatically executed as soon as the container starts, but to run the tests the command is: 
  ```bash
-'python -m pytest'.
+python -m pytest.
  ```
 
 ## Database
@@ -268,4 +269,3 @@ This project uses FastAPI for building the API, SQLAlchemy for database operatio
 ## Additional Notes
 
  - Ensure that you have docker installed.
- - You can access the API documentation by visiting http://localhost:8000/docs when the API is running.
