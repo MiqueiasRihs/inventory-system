@@ -1,6 +1,6 @@
 #!/bin/bash
 
-attempts=0
+attempts=1
 max_attempts=10
 
 while [ $attempts -lt $max_attempts ]; do
