@@ -1,6 +1,9 @@
 from sqlalchemy.orm import Session
 
 from . import models, schemas
+from typing import Union
+
+from datetime import date
 
 
 def create_inventory(db: Session, inventory: schemas.InventoryCreate):
@@ -49,6 +52,18 @@ def update_inventory_quantity(db: Session, inventory_id: int, new_quantity: int)
 
     if db_inventory:
         db_inventory.quantity = new_quantity
+        db.commit()
+        db.refresh(db_inventory)
+        return db_inventory
+
+    return
+
+def update_future_inventory(db: Session, inventory_id: int, product: schemas.FutureInventoryUpdate):
+    db_inventory = db.query(models.FutureInventory).filter(models.FutureInventory.id == inventory_id).first()
+
+    if db_inventory:
+        db_inventory.quantity = product.quantity if product.quantity else db_inventory.quantity
+        db_inventory.available_date = product.available_date if product.available_date else db_inventory.available_date
         db.commit()
         db.refresh(db_inventory)
         return db_inventory

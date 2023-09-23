@@ -55,6 +55,9 @@ class FutureInventoryCreate(FutureInventoryBase):
             date_obj = datetime.strptime(value, '%d/%m/%Y').date()
         except ValueError:
             raise ValueError('Data de disponibilidade inválida')
+        
+        if date_obj < date.today():
+            raise ValueError("A data de disponibilidade precisa ser uma data futura")
     
         return str(date_obj)
 
@@ -63,6 +66,23 @@ class   FutureInventory(FutureInventoryBase):
         orm_mode = True
         
         
+class FutureInventoryUpdate(BaseModel):
+    quantity: int
+    available_date: Union[str, date, None]
+    
+    @validator('available_date')
+    def validate_available_date(cls, value):
+        try:
+            date_obj = datetime.strptime(value, '%d/%m/%Y').date()
+        except ValueError:
+            raise ValueError('Data de disponibilidade inválida')
+        
+        if date_obj < date.today():
+            raise ValueError("A data de disponibilidade precisa ser uma data futura")
+    
+        return str(date_obj)
+
+
 ###### ReservationInventory ######
 class ReservationInventoryBase(BaseModel):
     id: int
@@ -106,4 +126,4 @@ class ConsultResult(Consult):
     available: bool
     
 class ConsultResultFutureInventory(ConsultResult):
-    inventory_available_date: Union[str, None] = None
+    future_inventory_available_date: Union[str, None] = None

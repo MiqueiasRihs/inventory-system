@@ -94,8 +94,8 @@ def test_register_future_inventory(test_db):
     
     assert response.status_code == 200
     assert response.json() == [
-        {'id': 2, 'quantity': 10, 'available_date': '2023-09-21', 'name': None},
-        {'id': 4, 'quantity': 60, 'available_date': '2023-10-20', 'name': None}
+        {'id': 2, 'quantity': 10, 'available_date': '2023-12-21', 'name': None},
+        {'id': 4, 'quantity': 60, 'available_date': '2023-12-20', 'name': None}
     ]
     
 
@@ -279,8 +279,8 @@ def test_consult_inventory_estoque_futuro(test_db):
     
     assert response.status_code == 200
     assert response.json() == [
-        {'id': 1, 'quantity': 11, 'stock_availability': 10, 'available': False, 'inventory_available_date': None},
-        {'id': 4, 'quantity': 110, 'stock_availability': 110, 'available': True, 'inventory_available_date': '20/10/2023'}
+        {'id': 1, 'quantity': 11, 'stock_availability': 10, 'available': False, 'future_inventory_available_date': None},
+        {'id': 4, 'quantity': 110, 'stock_availability': 110, 'available': True, 'future_inventory_available_date': '20/12/2023'}
     ]
 
 
@@ -294,8 +294,8 @@ def test_consult_inventory_estoque_futuro_nonexistent_products(test_db):
     
     assert response.status_code == 200
     assert response.json() == [
-        {'id': 10, 'quantity': 5, 'stock_availability': 0, 'available': False, 'inventory_available_date': None},
-        {'id': 11, 'quantity': 10, 'stock_availability': 0, 'available': False, 'inventory_available_date': None}
+        {'id': 10, 'quantity': 5, 'stock_availability': 0, 'available': False, 'future_inventory_available_date': None},
+        {'id': 11, 'quantity': 10, 'stock_availability': 0, 'available': False, 'future_inventory_available_date': None}
     ]
 
 
@@ -309,7 +309,7 @@ def test_consult_inventory_estoque_futuro_without_future_stock(test_db):
     
     assert response.status_code == 200
     assert response.json() == [{
-        'id': 1, 'quantity': 10, 'stock_availability': 10, 'available': True, 'inventory_available_date': None
+        'id': 1, 'quantity': 10, 'stock_availability': 10, 'available': True, 'future_inventory_available_date': None
     }]
 
 
@@ -323,7 +323,7 @@ def test_consult_inventory_estoque_futuro_with_future_stock(test_db):
     
     assert response.status_code == 200
     assert response.json() == [{
-        'id': 4, 'quantity': 50, 'stock_availability': 110, 'available': True, 'inventory_available_date': '20/10/2023'
+        'id': 4, 'quantity': 50, 'stock_availability': 110, 'available': True, 'future_inventory_available_date': '20/12/2023'
     }]
 
 
@@ -334,7 +334,7 @@ def test_consult_inventory_estoque_futuro_with_no_stock(test_db):
     
     assert response.status_code == 200
     assert response.json() == [{
-        'id': 100, 'quantity': 200, 'stock_availability': 0, 'available': False, 'inventory_available_date': None
+        'id': 100, 'quantity': 200, 'stock_availability': 0, 'available': False, 'future_inventory_available_date': None
     }]
     
     

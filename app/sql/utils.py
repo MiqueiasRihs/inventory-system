@@ -13,7 +13,7 @@ def calculate_stock_availability(result, strategy):
         elif strategy == "estoque-futuro":
             stock_availability = (inventory_quantity + future_quantity) - reservation_quantity
 
-        available_date = result.get("inventory_available_date")
+        available_date = result.get("future_inventory_available_date")
         
         difference = inventory_quantity - reservation_quantity
         

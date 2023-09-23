@@ -13,7 +13,7 @@ def get_stock_availability_inventory(db: Session, product_id: int, strategy):
             i.quantity AS inventory_quantity,
             SUM(ri.quantity) AS reservation_quantity,
             fi.quantity AS future_reservation_quantity,
-            TO_CHAR(fi.available_date, 'DD/MM/YYYY') AS inventory_available_date
+            TO_CHAR(fi.available_date, 'DD/MM/YYYY') AS future_inventory_available_date
         FROM inventory i
         LEFT JOIN reservation_inventory ri 
             ON i.id = ri.inventory_id
@@ -34,7 +34,7 @@ def get_stock_availability_inventory(db: Session, product_id: int, strategy):
             "inventory_quantity": row[1],
             "reservation_quantity": row[2],
             "future_reservation_quantity": row[3],
-            "inventory_available_date": row[4]
+            "future_inventory_available_date": row[4]
         }
         
     return calculate_stock_availability(result_dict, strategy)

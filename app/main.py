@@ -63,6 +63,19 @@ def register_future_inventory(products: List[schemas.FutureInventoryCreate], db:
 
     return created_products
 
+@app.put("/estoque/estoque-futuro/{product_id}", response_model=schemas.FutureInventory)
+def register_future_inventory(product_id: int, product: schemas.FutureInventoryUpdate, db: Session = Depends(get_db)):
+    
+    # Check if the future inventory already exists
+    future_inventory = crud.get_future_inventory_by_id(db, id=product_id)
+    if not future_inventory:
+        raise HTTPException(status_code=400, detail=f"O estoque futuro do produto com ID {product_id} não existe, tente cria-lo")
+        
+    # update the future inventory
+    updated_inventory = crud.update_future_inventory(db=db, inventory_id=product_id, product=product)
+
+    return updated_inventory
+
 # Endpoint to register inventory reservation
 @app.post("/estoque/reserva", response_model=List[schemas.ReservationInventory])
 def inventory_reservation(products: List[schemas.ReservationInventoryCreate], db: Session = Depends(get_db)):
@@ -112,7 +125,7 @@ def consult_inventory(strategy: str, products: List[schemas.Consult], db: Sessio
                 quantity=product.quantity,
                 stock_availability=stock_availability.get("stock_availability"),
                 available=product.quantity <= stock_availability.get("stock_availability"),
-                inventory_available_date=stock_availability.get("available_date")
+                future_inventory_available_date=stock_availability.get("available_date")
             ))
     
     return result

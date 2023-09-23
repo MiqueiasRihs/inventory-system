@@ -22,12 +22,12 @@ INVENTORY_FUTURE_DATA = [
     {
         "id": 2,
         "quantity": 10,
-        "available_date": "21/09/2023"
+        "available_date": "21/12/2023"
     },
     {
         "id": 4,
         "quantity": 60,
-        "available_date": "20/10/2023"
+        "available_date": "20/12/2023"
     }
 ]
 
