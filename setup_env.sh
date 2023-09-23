@@ -11,7 +11,7 @@ while [ $attempts -lt $max_attempts ]; do
         uvicorn main:app --host 0.0.0.0 --port 8000 --reload
         break
     else
-        echo -e "\nTentativa $attempts: Banco de dados não está pronto. Aguardando...\n"
+        echo -e "\nTentativa $attempts: Banco de dados não está pronto. Reconectando...\n"
         attempts=$((attempts+1))
         sleep 5
     fi

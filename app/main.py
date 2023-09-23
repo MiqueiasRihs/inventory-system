@@ -82,6 +82,9 @@ def inventory_reservation(products: List[schemas.ReservationInventoryCreate], db
 @app.post("/estoque/consulta/{strategy}")
 def consult_inventory(strategy: str, products: List[schemas.Consult], db: Session = Depends(get_db)):
     result = []
+    
+    if strategy not in ["estoque-fisico", "estoque-futuro"]:
+        raise HTTPException(status_code=404, detail=f"Estratégia não encontrada, selecione estoque-fisico ou estoque-futuro")
 
     for product in products:
         stock_availability = get_stock_availability_inventory(db, product.id, strategy)

@@ -323,3 +323,19 @@ def test_consult_inventory_estoque_futuro_with_no_stock(test_db):
     assert response.json() == [{
         'id': 100, 'quantity': 200, 'stock_availability': 0, 'available': False, 'inventory_available_date': None
     }]
+    
+    
+def test_consult_without_strategy(test_db):
+    response = client.post("/estoque/consulta", json=[
+        {"id": 100, "quantity": 200}
+    ])
+    
+    assert response.status_code == 404
+    
+    
+def test_consult_invalid_strategy(test_db):
+    response = client.post("/estoque/consulta/invalid", json=[
+        {"id": 100, "quantity": 200}
+    ])
+    
+    assert response.status_code == 404
