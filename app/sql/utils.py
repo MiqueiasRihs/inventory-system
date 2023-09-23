@@ -6,6 +6,7 @@ def calculate_stock_availability(result, strategy):
         reservation_quantity = result['reservation_quantity'] if result['reservation_quantity'] else 0
         future_quantity = result['future_reservation_quantity'] if result['future_reservation_quantity'] else 0
 
+        # Calculate stock availability based on the selected strategy
         if strategy == "estoque-fisico":
             stock_availability = inventory_quantity - reservation_quantity
 
@@ -13,6 +14,7 @@ def calculate_stock_availability(result, strategy):
             stock_availability = (inventory_quantity + future_quantity) - reservation_quantity
 
         available_date = result.get("inventory_available_date")
+        
         difference = inventory_quantity - reservation_quantity
         
     stock_availability = {

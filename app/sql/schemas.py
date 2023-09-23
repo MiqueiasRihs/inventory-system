@@ -92,7 +92,8 @@ class ReservationInventory(ReservationInventoryBase):
     class Config:
         orm_mode = True
         
-        
+
+###### Consult ######
 class Consult(BaseModel):
     id: int
     quantity: int
