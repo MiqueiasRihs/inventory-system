@@ -141,7 +141,7 @@ def test_inventory_reservation(test_db):
     
     assert response.status_code == 200
     assert response.json() == [
-        {'id': 1, 'status': 'Ativo', 'quantity': 50, 'expiration_date': '2023-10-23', 'inventory_id': 3}
+        {'id': 1, 'status': 'Ativo', 'quantity': 50, 'expiration_date': '2023-11-23', 'inventory_id': 3}
     ]
 
 
@@ -158,12 +158,25 @@ def test_inventory_reservation_more_than_inventory_quantity(test_db):
     response = client.post("/estoque/reserva", json=[{
         "id": 3,
         "quantity": 300,
-        "expiration_date": "23/09/2023",
+        "expiration_date": "23/11/2023",
         "status": "Ativo"
     }])
     
     assert response.status_code == 400
     assert response.json() == {'detail': 'Não é possivel reservar pois não existe estoque suficiente para o produto com ID 3, o estoque atual é 230'}
+
+
+def test_inventory_reservation_past_date(test_db):
+    create_inventory_data(client)
+    
+    response = client.post("/estoque/reserva", json=[{
+        "id": 3,
+        "quantity": 5,
+        "expiration_date": "23/09/1997",
+        "status": "Ativo"
+    }])
+    
+    assert response.status_code == 422
 
 
 def test_inventory_reservation_invalid_date(test_db):
@@ -185,7 +198,7 @@ def test_inventory_reservation_invalid_quantity(test_db):
     response = client.post("/estoque/reserva", json=[{
         "id": 3,
         "quantity": -65,
-        "expiration_date": "23/09/2023",
+        "expiration_date": "23/11/2023",
         "status": "Ativo"
     }])
     

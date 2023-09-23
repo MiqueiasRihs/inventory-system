@@ -35,7 +35,7 @@ INVENTORY_RESERVATION_DATA = [
     {
         "id": 3,
         "quantity": 50,
-        "expiration_date": "23/10/2023",
+        "expiration_date": "23/11/2023",
         "status": "Ativo"
     }
 ]

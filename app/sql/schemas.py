@@ -84,6 +84,9 @@ class ReservationInventoryCreate(ReservationInventoryBase):
             date_obj = datetime.strptime(value, '%d/%m/%Y').date()
         except ValueError:
             raise ValueError('Data de expiração inválida')
+        
+        if date_obj < date.today():
+            raise ValueError("A data de expiração precisa ser uma data futura")
     
         return str(date_obj)
 
